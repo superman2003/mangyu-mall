@@ -46,3 +46,20 @@ A Node.js + Express + MySQL based e-commerce backend service.
 - `POST /api/add-review` - Add review
 
 ## Project Structure
+
+├── src/
+│   ├── config/         # Configuration files
+│   ├── controllers/    # Request handlers
+│   ├── middlewares/    # Custom middleware
+│   ├── models/         # Database models
+│   ├── routes/         # API routes
+│   ├── utils/          # Utility functions
+│   └── app.js         # Express app setup
+├── tests/             # Test files
+├── uploads/           # File upload directory
+├── .env              # Environment variables
+├── .env.example      # Example environment variables
+├── package.json
+└── README.md
+
+
