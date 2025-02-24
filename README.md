@@ -45,21 +45,4 @@ A Node.js + Express + MySQL based e-commerce backend service.
 - `GET /api/order-history` - Order history
 - `POST /api/add-review` - Add review
 
-## Project Structure
-
-tree
-├── src/
-│ ├── config/ # Configuration files
-│ ├── controllers/ # Request handlers
-│ ├── middlewares/ # Custom middleware
-│ ├── models/ # Database models
-│ ├── routes/ # API routes
-│ ├── utils/ # Utility functions
-│ └── app.js # Express app setup
-├── tests/ # Test files
-├── uploads/ # File upload directory
-├── .env # Environment variables
-├── .env.example # Example environment variables
-├── package.json
-└── README.md
 
