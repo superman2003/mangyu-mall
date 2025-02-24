@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/busyfish.png" type="image/png">
+    <title>忙鱼网</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: url('/background.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .header-container {
+            width: 100%;
+            height: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+        .header-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 150px;
+            width: 100%;
+            transition: transform 0.1s ease-out;
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        /* Layers z-index and images */
+        .layer1 { background-image: url('image1.png'); z-index: 8; }
+        .layer2 { background-image: url('image2.png'); z-index: 6; }
+        .layer3 { background-image: url('image3.png'); z-index: 5; }
+        .layer4 { background-image: url('image4.png'); z-index: 3; }
+        .layer5 { background-image: url('image5.png'); z-index: 11; }
+        .layer6 { background-image: url('image6.png'); z-index: 17; }
+        .layer7 { background-image: url('image7.png'); z-index: 4; }
+        .layer8 { background-image: url('image8.png'); z-index: 2; }
+        .layer9 { background-image: url('image9.png'); z-index: 18; }
+        .layer11 { background-image: url('image11.png'); z-index: 7; }
+        .layer12 { background-image: url('image12.png'); z-index: 15; }
+        .layer13 { background-image: url('image13.png'); z-index: 14; }
+        .layer14 { background-image: url('image14.png'); z-index: 13; }
+        .layer15 { background-image: url('image15.png'); z-index: 9; }
+        .layer16 { background-image: url('image16.png'); z-index: 12; }
+        .layer17 { background-image: url('image17.png'); z-index: 10; }
+        .layer18 { background-image: url('image18.png'); z-index: 3; }
+
+        main {
+            padding: 1em;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+        h2 { color: #333; text-align: center; margin-bottom: 20px; }
+        #product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .product-item {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            margin: 1em;
+            padding: 1.5em;
+            width: calc(33.333% - 2em);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 450px; /* 设置最小高度，确保一致性 */
+        }
+        .product-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .product-item img {
+            transition: all 0.4s ease;
+            border-radius: 10px;
+            max-width: 100%;
+            height: 200px; /* 增加图片高度 */
+            object-fit: contain; /* 确保图片完整显示 */
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .product-item:hover img {
+            transform: scale(1.05);
+        }
+        .product-name {
+            font-size: 1.2em;
+            margin: 10px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .product-price {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .product-description {
+            flex-grow: 1;
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* 显示两行 */
+            -webkit-box-orient: vertical;
+        }
+        .purchase-button {
+            background: linear-gradient(145deg, #2c3e50, #3498db);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .purchase-button:hover {
+            background: linear-gradient(145deg, #3498db, #2c3e50);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .bg-dark {
+            background-color: rgba(33, 37, 41, 0.9) !important;
+        }
+        footer {
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: #fff;
+            padding: 5px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        footer p {
+            margin: 0;
+            font-size: 12px;
+            line-height: 20px;  /* 调整行高以确保两行文字都显示 */
+        }
+        .input-group {
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 30px;
+            overflow: hidden;
+        }
+        #search-box {
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1em;
+            border-radius: 30px 0 0 30px;
+        }
+        #search-button {
+            padding: 15px 30px;
+            background: linear-gradient(145deg, #2c3e50, #3498db);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        #search-button:hover {
+            background: linear-gradient(145deg, #3498db, #2c3e50);
+            transform: translateX(3px);
+        }
+        .auth-buttons, .user-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1em;
+        }
+        .auth-buttons a, .user-links a {
+            margin: 0 1em;
+            padding: 0.8em 1.5em;
+            background: linear-gradient(145deg, #2c3e50, #3498db);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .auth-buttons a:hover, .user-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(145deg, #3498db, #2c3e50);
+        }
+        #customer-service {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, #2c3e50, #3498db);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            height: 40px;
+            line-height: 40px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            z-index: 1001;
+        }
+        #customer-service:hover {
+            background: #3498db;
+            color: #ffffff;
+        }
+        #customer-service i {
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        #customer-service-icon {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .category-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .category-btn.active {
+            background: linear-gradient(145deg, #2c3e50, #3498db);
+            color: white;
+        }
+        .back-to-top-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .back-to-top-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .back-to-top-btn:hover {
+            background: #f8f9fa;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        .sort-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin: 0 20px 20px 0;
+        }
+        .sort-select {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .sort-select:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 5px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 35px;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-size: 10px;
+            transition: all 0.3s ease;
+        }
+        .nav-item i {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding-bottom: 60px;  /* 添加底部内边距，为底部导航栏留出空间 */
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-container" id="header">
+        <div class="header-layer layer1"></div>
+        <div class="header-layer layer2"></div>
+        <div class="header-layer layer3"></div>
+        <div class="header-layer layer4"></div>
+        <div class="header-layer layer5"></div>
+        <div class="header-layer layer6"></div>
+        <div class="header-layer layer7"></div>
+        <div class="header-layer layer8"></div>
+        <div class="header-layer layer9"></div>
+        <div class="header-layer layer10"></div>
+        <div class="header-layer layer11"></div>
+        <div class="header-layer layer12"></div>
+        <div class="header-layer layer13"></div>
+        <div class="header-layer layer14"></div>
+        <div class="header-layer layer15"></div>
+        <div class="header-layer layer16"></div>
+        <div class="header-layer layer17"></div>
+        <div class="header-layer layer18"></div>
+    </header>
+    <main class="container mt-4">
+        <div class="auth-buttons" id="auth-buttons">
+            <a href="login.html" class="btn btn-dark">登录</a>
+            <a href="register.html" class="btn btn-dark">注册</a>
+        </div>
+        <div class="user-links" id="user-links" style="display: none;">
+            <a href="my.html" class="btn btn-dark">我的</a>
+        </div>
+        <h2>产品列表</h2>
+        <div class="input-group mb-3">
+            <input type="text" id="search-box" class="form-control" placeholder="搜索产品...">
+            <button id="search-button" class="btn btn-primary">搜索</button>
+        </div>
+        <div class="category-filter">
+            <button class="category-btn active" data-category="all">全部</button>
+            <button class="category-btn" data-category="electronics">电子产品</button>
+            <button class="category-btn" data-category="clothing">服装</button>
+            <button class="category-btn" data-category="books">图书</button>
+            <button class="category-btn" data-category="others">其他</button>
+        </div>
+        <div class="sort-controls">
+            <select id="sort-select" class="sort-select">
+                <option value="default">默认排序</option>
+                <option value="price-asc">价格从低到高</option>
+                <option value="price-desc">价格从高到低</option>
+                <option value="name-asc">名称A-Z</option>
+                <option value="name-desc">名称Z-A</option>
+            </select>
+        </div>
+        <div id="loading-spinner" class="loading-spinner" style="display: none;">
+            <div class="spinner"></div>
+            <p>加载中...</p>
+        </div>
+        <div id="product-list" class="row"></div>
+    </main>
+    <footer class="bg-dark text-white text-center py-3">
+        <p>&copy; 忙鱼网</p>
+        <p>网站作者QQ：2112076433</p>
+    </footer>
+    <button id="customer-service">
+        <i class="fas fa-headset"></i>
+        联系客服
+    </button>
+    
+    <button id="back-to-top" class="back-to-top-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+            <path d="M12 4l-8 8h16l-8-8z" fill="currentColor"/>
+        </svg>
+    </button>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const skipTokenClear = urlParams.get('skipTokenClear');
+            if (!skipTokenClear) {
+                localStorage.removeItem('token');
+            }
+            const token = localStorage.getItem('token');
+            if (token) {
+                document.getElementById('auth-buttons').style.display = 'none';
+                document.getElementById('user-links').style.display = 'flex';
+            } else {
+                document.getElementById('auth-buttons').style.display = 'flex';
+                document.getElementById('user-links').style.display = 'none';
+            }
+            fetchAllProducts();
+            function fetchAllProducts() {
+                const spinner = document.getElementById('loading-spinner');
+                const productList = document.getElementById('product-list');
+                
+                spinner.style.display = 'flex';
+                productList.style.display = 'none';
+                
+                fetch('/api/products')
+                    .then(response => response.json())
+                    .then(data => {
+                        displayProducts(data);
+                        spinner.style.display = 'none';
+                        productList.style.display = 'flex';
+                    })
+                    .catch(error => {
+                        console.error('获取所有产品信息时出错:', error);
+                        spinner.style.display = 'none';
+                        productList.style.display = 'flex';
+                    });
+            }
+            const searchButton = document.getElementById('search-button');
+            searchButton.addEventListener('click', function() {
+                const searchQuery = document.getElementById('search-box').value.trim();
+                if (!searchQuery) {
+                    alert("请输入搜索内容");
+                    return;
+                }
+                
+                const spinner = document.getElementById('loading-spinner');
+                const productList = document.getElementById('product-list');
+                
+                spinner.style.display = 'flex';
+                productList.style.display = 'none';
+                
+                fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displayProducts(data);
+                        spinner.style.display = 'none';
+                        productList.style.display = 'flex';
+                    })
+                    .catch(error => {
+                        console.error('搜索产品时出错:', error);
+                        spinner.style.display = 'none';
+                        productList.style.display = 'flex';
+                    });
+            });
+            function displayProducts(products) {
+                const productList = document.getElementById('product-list');
+                productList.innerHTML = '';
+                
+                if (products.length === 0) {
+                    productList.innerHTML = '<p>未找到相关产品</p>';
+                    return;
+                }
+                
+                products.forEach((product, index) => {
+                    const productItem = document.createElement('div');
+                    productItem.className = 'product-item col-md-4';
+                    productItem.style.opacity = '0';
+                    productItem.style.transform = 'translateY(20px)';
+                    productItem.innerHTML = `
+                        <img src="${product.image}" alt="${product.name}" onclick="openProductDetail(${product.id})" class="img-fluid">
+                        <div class="product-name" title="${product.name}">${product.name}</div>
+                        <div class="product-price">价格: ¥${product.price}</div>
+                        <div class="product-description">${product.description}</div>
+                        <button onclick="purchaseProduct(event, ${product.id}, '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${product.image}')" class="btn btn-primary purchase-button">购买</button>
+                    `;
+                    
+                    productList.appendChild(productItem);
+                    
+                    // 延迟显示每个产品卡片
+                    setTimeout(() => {
+                        productItem.style.transition = 'all 0.5s ease';
+                        productItem.style.opacity = '1';
+                        productItem.style.transform = 'translateY(0)';
+                    }, index * 100);
+                });
+            }
+            window.openProductDetail = function(productId) {
+                window.location.href = `product-detail.html?productId=${productId}`;
+            };
+            window.purchaseProduct = function(event, productId, productName, productPrice, productImage) {
+                event.stopPropagation(); // 阻止事件冒泡
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    // 用户未登录，跳转到登录页面
+                    alert('请先登录！');
+                    window.location.href = 'login.html';
+                } else {
+                    // 用户已登录，继续跳转到付款页面
+                    window.location.href = `pay.html?productId=${productId}&productName=${encodeURIComponent(productName)}&productPrice=${productPrice}&productImage=${encodeURIComponent(productImage)}`;
+                }
+            };
+            const searchBox = document.getElementById('search-box');
+            searchBox.addEventListener('focus', () => {
+                searchBox.style.transition = 'all 0.3s ease';
+                searchBox.style.transform = 'scale(1.02)';
+                searchBox.style.boxShadow = '0 0 15px rgba(52, 152, 219, 0.3)';
+            });
+            searchBox.addEventListener('blur', () => {
+                searchBox.style.transform = 'scale(1)';
+                searchBox.style.boxShadow = 'none';
+            });
+            document.getElementById('sort-select').addEventListener('change', (e) => {
+                const sortValue = e.target.value;
+                const productList = document.getElementById('product-list');
+                const products = Array.from(productList.children);
+
+                // 添加过渡效果
+                products.forEach(product => {
+                    product.style.transition = 'all 0.3s ease';
+                    product.style.opacity = '0';
+                    product.style.transform = 'translateY(20px)';
+                });
+
+                setTimeout(() => {
+                    products.sort((a, b) => {
+                        switch(sortValue) {
+                            case 'price-asc':
+                                return getPriceFromElement(a) - getPriceFromElement(b);
+                            case 'price-desc':
+                                return getPriceFromElement(b) - getPriceFromElement(a);
+                            case 'name-asc':
+                                return getNameFromElement(a).localeCompare(getNameFromElement(b));
+                            case 'name-desc':
+                                return getNameFromElement(b).localeCompare(getNameFromElement(a));
+                            default:
+                                return 0;
+                        }
+                    });
+
+                    productList.innerHTML = '';
+                    products.forEach((product, index) => {
+                        productList.appendChild(product);
+                        // 延迟显示排序后的产品
+                        setTimeout(() => {
+                            product.style.opacity = '1';
+                            product.style.transform = 'translateY(0)';
+                        }, index * 50);
+                    });
+                }, 300);
+            });
+            function getPriceFromElement(element) {
+                const priceText = element.querySelector('.product-price').textContent;
+                return parseFloat(priceText.replace(/[^0-9.]/g, ''));
+            }
+            function getNameFromElement(element) {
+                return element.querySelector('.product-name').textContent;
+            }
+            const categoryButtons = document.querySelectorAll('.category-btn');
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // 移除所有按钮的active类
+                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+                    // 给当前点击的按钮添加active类
+                    button.classList.add('active');
+                    
+                    const category = button.dataset.category;
+                    if (category === 'all') {
+                        fetchAllProducts();
+                    } else {
+                        // 添加分类筛选API调用
+                        fetch(`/api/products/category/${category}`)
+                            .then(response => response.json())
+                            .then(data => displayProducts(data))
+                            .catch(error => console.error('获取分类产品时出错:', error));
+                    }
+                });
+            });
+        });
+        document.addEventListener('mousemove', function(e) {
+            const header = document.getElementById('header');
+            const rect = header.getBoundingClientRect();
+            if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                const layers = document.querySelectorAll('.header-layer');
+                layers.forEach((layer, index) => {
+                    const moveX = (e.clientX / window.innerWidth) * (20 + index * 5) - (10 + index * 2.5);
+                    layer.style.transform = `translate(${moveX}px, 0px)`;
+                });
+            }
+        });
+        window.addEventListener('scroll', () => {
+            const backToTopBtn = document.getElementById('back-to-top');
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        });
+        document.getElementById('back-to-top').addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

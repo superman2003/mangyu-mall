@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>请支付</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 0.5em 1em;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        img {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>请扫描下方微信支付二维码</h1>
+        <img src="paycode.png" alt="微信支付二维码" width="200">
+        <button id="back-to-home">回到首页</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('productId');
+            const productName = decodeURIComponent(params.get('productName'));
+            const productPrice = params.get('productPrice');
+            const productImage = decodeURIComponent(params.get('productImage'));
+            const itemCount = params.get('itemCount');
+
+            if (productId && productName && productPrice && productImage) {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    alert('请先登录！');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // 发送订单到服务器
+                fetch('api/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        product_id: parseInt(productId),
+                        product_name: productName,
+                        product_price: parseFloat(productPrice),
+                        product_image: productImage,
+                        order_date: new Date().toISOString().slice(0, 19).replace('T', ' ')  // 格式化为 'YYYY-MM-DD HH:mm:ss'
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(text || '订单创建失败');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Order created successfully:', data);
+                    alert('订单创建成功！');
+                })
+                .catch(error => {
+                    console.error('创建订单失败:', error);
+                    alert(error.message);
+                });
+
+                console.log('发送订单数据:', {
+                    product_id: parseInt(productId),
+                    product_name: productName,
+                    product_price: parseFloat(productPrice),
+                    product_image: productImage,
+                    order_date: new Date().toISOString().slice(0, 19).replace('T', ' ')  // 格式化为 'YYYY-MM-DD HH:mm:ss'
+                });
+            }
+
+            document.getElementById('back-to-home').onclick = function() {
+                console.log('Redirecting to home page...');
+                window.location.href = 'webtest.html?skipTokenClear=true';
+            };
+        });
+    </script>
+</body>
+</html>
